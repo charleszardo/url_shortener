@@ -1,15 +1,13 @@
 class ShortenedUrl < ActiveRecord::Base
-  validates :short_url, :presence => true
+  validates :short_url, :long_url, :user_id :presence => true
   validates :short_url, :uniqueness => true
-  validates :long_url, :presence => true
-  validates :user_id, :presence => true
 
   belongs_to :submitter, :class_name => "User", :foreign_key => :user_id, :primary_key => :id
 
   def self.random_code
       loop do
-        code = SecureRandom::urlsafe_base64
-        return code if !self.exists?(:short_url => code)
+        code = SecureRandom::urlsafe_base64(16)
+        return code unless self.exists?(short_url: code)
       end
   end
 
