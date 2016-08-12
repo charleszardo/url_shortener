@@ -23,6 +23,14 @@ if answer == '0'
   puts "Short url is: #{shortened_url.short_url}"
   puts "Goodbye!"
 else
+  puts "Type in your shortened url"
+  short_url = gets.chomp
 
-  Launchy.open('http://www.google.com')
+  if ShortenedUrl.exists?(short_url: short_url)
+    shortened_url = ShortenedUrl.where(short_url: short_url).first
+    Visit.record_visit!(user, shortened_url)
+    Launchy.open(shortened_url.long_url)
+  else
+    puts "Invalid shortened url"
+  end
 end
