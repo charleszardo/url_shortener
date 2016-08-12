@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   :primary_key => :id
 
   has_many :visited_urls,
+  -> { distinct },
   :through => :visits,
-  :source => :user
+  :source => :shortened_url
 end

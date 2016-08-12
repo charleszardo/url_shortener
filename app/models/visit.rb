@@ -3,7 +3,7 @@ class Visit < ActiveRecord::Base
     Visit.create(:user_id => user.id, :shortened_url_id => shortened_url.id)
   end
 
-  belongs_to :visitor,
+  belongs_to :user,
     :class_name => "User",
     :primary_key => :id,
     :foreign_key => :user_id
