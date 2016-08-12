@@ -1,17 +1,17 @@
-puts 'Input your email:'
+puts "Input your email:"
 email = gets.chomp
 user = User.find_or_create_by(email: email)
 
 while true
-  puts 'What do you want to do?'
-  puts '0. Create shortened URL'
-  puts '1. Visit shortened URL'
+  puts "What do you want to do?"
+  puts "0. Create shortened URL"
+  puts "1. Visit shortened URL"
 
   answer = gets.chomp
-  if answer == '0' || answer == '1'
+  if answer == "0" || answer == "1"
     break
   else
-    puts 'Invalid response'
+    puts "Invalid response"
   end
 end
 
@@ -19,8 +19,10 @@ if answer == '0'
   puts "Type in your long url"
   long_url = gets.chomp
 
-  s = ShortenedUrl.create_for_user_and_long_url!(user, long_url)
-  p s
+  shortened_url = ShortenedUrl.create_for_user_and_long_url!(user, long_url)
+  puts "Short url is: #{shortened_url.short_url}"
+  puts "Goodbye!"
 else
-  
+
+  Launchy.open('http://www.google.com')
 end
