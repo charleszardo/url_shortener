@@ -1,5 +1,5 @@
 class Visit < ActiveRecord::Base
-  validates :visitor_id, :shortened_url_id, :presence => true
+  validates :visitor, :shortened_url, :presence => true
 
   belongs_to :visitor, :class_name => "User"
 
