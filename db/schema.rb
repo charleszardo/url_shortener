@@ -11,18 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160811024502) do
+ActiveRecord::Schema.define(version: 20160812142255) do
 
   create_table "shortened_urls", force: :cascade do |t|
-    t.string   "short_url",  null: false
-    t.string   "long_url",   null: false
-    t.integer  "user_id"
+    t.string   "short_url",    null: false
+    t.string   "long_url",     null: false
+    t.integer  "submitter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "shortened_urls", ["short_url"], name: "index_shortened_urls_on_short_url", unique: true
-  add_index "shortened_urls", ["user_id"], name: "index_shortened_urls_on_user_id"
+  add_index "shortened_urls", ["submitter_id"], name: "index_shortened_urls_on_submitter_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",      null: false
@@ -33,13 +33,13 @@ ActiveRecord::Schema.define(version: 20160811024502) do
   add_index "users", ["email"], name: "index_users_on_email"
 
   create_table "visits", force: :cascade do |t|
-    t.integer  "user_id",          null: false
+    t.integer  "visitor_id",       null: false
     t.integer  "shortened_url_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "visits", ["shortened_url_id"], name: "index_visits_on_shortened_url_id"
-  add_index "visits", ["user_id"], name: "index_visits_on_user_id"
+  add_index "visits", ["visitor_id"], name: "index_visits_on_visitor_id"
 
 end
