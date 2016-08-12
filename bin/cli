@@ -16,7 +16,11 @@ while true
 end
 
 if answer == '0'
-  
-else
+  puts "Type in your long url"
+  long_url = gets.chomp
 
+  s = ShortenedUrl.create_for_user_and_long_url!(user, long_url)
+  p s
+else
+  
 end
