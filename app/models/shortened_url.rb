@@ -1,6 +1,7 @@
 class ShortenedUrl < ActiveRecord::Base
   validates :short_url, :long_url, :submitter, :presence => true
-  validates :short_url, :uniqueness => true
+  validates :short_url, :uniqueness => true, :length => { :maximum => 255, :message => "Must be less than 255 characters"}
+  validate :no_more_than_five_urls_within_a_minute_from_single_user
 
   belongs_to :submitter, :class_name => "User"
 
@@ -43,5 +44,18 @@ class ShortenedUrl < ActiveRecord::Base
       .where("created_at > ?", 10.minutes.ago)
       .distinct
       .count
+  end
+
+  private
+  def no_more_than_five_urls_within_a_minute_from_single_user
+    count = ShortenedUrl
+      .select("*")
+      .where("created_at > ?", 1.minutes.ago)
+      .where("submitter_id = ?", submitter_id)
+      .count
+
+    if count >= 5
+      errors[:base] << "can't submit more than five urls within one minute"
+    end
   end
 end
