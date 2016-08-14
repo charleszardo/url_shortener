@@ -20,6 +20,10 @@ class ShortenedUrl < ActiveRecord::Base
     :source => :visitor
   )
 
+  has_many :taggings
+
+  has_many :tag_topics, :through => :taggings, :source => :tag_topic
+
   def self.random_code
       loop do
         code = SecureRandom::urlsafe_base64(16)
