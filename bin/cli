@@ -25,7 +25,8 @@ class CLI
 
     shortened_url = ShortenedUrl.create_for_user_and_long_url!(@current_user, long_url)
     puts "Short url is: #{shortened_url.short_url}"
-    puts "Goodbye!"
+
+    shortened_url
   end
 
   def visit_url!
@@ -40,15 +41,47 @@ class CLI
     end
   end
 
+  def tagging
+    puts "Would you like to add a tag?"
+    popular_tags = TagTopic.most_popular_tags.map { |tag_obj| tag_obj.topic }.join(", ")
+    puts "(popular tags: #{popular_tags})"
+    while true
+      puts "0. yes"
+      puts "1. no"
+      choice = Integer(gets.chomp)
+      break if [0, 1].include?(choice)
+      puts "Invalid response, try again."
+    end
+
+    result = choice == 0 ? add_tag! : nil
+    result
+  end
+
+  def add_tag!
+    puts "name your tag"
+    topic = gets.chomp
+
+    TagTopic.find_or_create_by(topic: topic)
+  end
+
+  def create_tagging!(tag_topic, url)
+    Tagging.create!(tag_topic_id: tag_topic.id, shortened_url_id: url.id)
+  end
+
   def run
     login_user!
 
     case get_user_choice
     when 0
-      create_url!
+      tag_topic = tagging
+
+      url = create_url!
+      create_tagging!(tag_topic, url) if tag_topic
     when 1
       visit_url!
     end
+
+    puts "Goodbye!"
   end
 end
 
