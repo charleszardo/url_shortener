@@ -1,8 +1,9 @@
 class ShortenedUrl < ActiveRecord::Base
   validates :short_url, :long_url, :submitter, :presence => true
   validates :short_url, :uniqueness => true, :length => { :maximum => 255, :message => "Must be less than 255 characters"}
-  # validate :no_more_than_five_urls_within_a_minute_from_single_user
-  # validate :limit_five_urls_per_user, :unless => :premium_user?
+  validates :long_url, :length => { :maximum => 255, :message => "Must be less than 255 characters"}
+  validate :no_more_than_five_urls_within_a_minute_from_single_user
+  validate :limit_five_urls_per_user, :unless => :premium_user?
 
   belongs_to :submitter, :class_name => "User"
 
@@ -34,6 +35,17 @@ class ShortenedUrl < ActiveRecord::Base
   def self.create_for_user_and_long_url!(user, long_url)
     ShortenedUrl.create!(submitter_id: user.id, long_url: long_url, short_url: ShortenedUrl.random_code)
   end
+
+  def self.create_custom_url_for_user_and_long_url!(user, long_url, custom_url)
+    ShortenedUrl.create!(submitter_id: user.id, long_url: long_url, short_url: custom_url, custom: true)
+  end
+
+  # def self.prune
+  #   ShortenedUrl
+  #     .select("*")
+  #     .joins("INNER JOIN visits ON visits.shortened_url_id = shortened_urls.id")
+  #     .where("visits.created_at ")
+  # end
 
   def num_clicks
     visits.count
