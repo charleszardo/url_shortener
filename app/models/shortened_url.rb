@@ -40,6 +40,10 @@ class ShortenedUrl < ActiveRecord::Base
     ShortenedUrl.create!(submitter_id: user.id, long_url: long_url, short_url: custom_url, custom: true)
   end
 
+  def self.unique_shortened_url?(url)
+    ShortenedUrl.find_by(short_url: url).nil?
+  end
+
   # def self.prune
   #   ShortenedUrl
   #     .select("*")
