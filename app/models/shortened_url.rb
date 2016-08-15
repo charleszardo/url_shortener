@@ -25,6 +25,8 @@ class ShortenedUrl < ActiveRecord::Base
 
   has_many :tag_topics, :through => :taggings, :source => :tag_topic
 
+  has_many :votes
+
   def self.random_code
       loop do
         code = SecureRandom::urlsafe_base64(16)
@@ -33,6 +35,9 @@ class ShortenedUrl < ActiveRecord::Base
   end
 
   def self.create_for_user_and_long_url!(user, long_url)
+    p user
+    p user.id
+    p long_url
     ShortenedUrl.create!(submitter_id: user.id, long_url: long_url, short_url: ShortenedUrl.random_code)
   end
 
@@ -44,12 +49,14 @@ class ShortenedUrl < ActiveRecord::Base
     ShortenedUrl.find_by(short_url: url).nil?
   end
 
-  # def self.prune
-  #   ShortenedUrl
-  #     .select("*")
-  #     .joins("INNER JOIN visits ON visits.shortened_url_id = shortened_urls.id")
-  #     .where("visits.created_at ")
-  # end
+  def self.prune
+    ShortenedUrl
+      .select("visits.*")
+      .joins("LEFT OUTER JOIN visits ON visits.shortened_url_id = shortened_urls.id")
+      .where("visits.created_at IS NOT null")
+      .order("visits.created_at")
+      .group("shortened_urls.id")
+  end
 
   def num_clicks
     visits.count

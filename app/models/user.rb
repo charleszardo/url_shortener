@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
     :source => :shortened_url
   )
 
+  has_many :votes
+
   def is_premium?
     self.premium
   end
