@@ -3,7 +3,7 @@ class ShortenedUrl < ActiveRecord::Base
   validates :short_url, :uniqueness => true, :length => { :maximum => 255, :message => "Must be less than 255 characters"}
   validates :long_url, :length => { :maximum => 255, :message => "Must be less than 255 characters"}
   validate :no_more_than_five_urls_within_a_minute_from_single_user
-  validate :limit_five_urls_per_user, :unless => :premium_user?
+  validate :limit_five_urls_per_user, :custom_url_must_be_made_by_premium_user, :unless => :premium_user?
 
   belongs_to :submitter, :class_name => "User"
 
@@ -73,6 +73,12 @@ class ShortenedUrl < ActiveRecord::Base
 
     if count >= 5
       errors[:base] << "can't submit more than five urls within one minute"
+    end
+  end
+
+  def custom_url_must_be_made_by_premium_user
+    if self.custom
+      errors[:base] << "non-premium users cannot make custom shortened urls"
     end
   end
 
