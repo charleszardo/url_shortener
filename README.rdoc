@@ -1,8 +1,8 @@
-=== URL Shortener
+= URL Shortener
 
 Rails app allowing user to create and save shortened urls.
 
-== Features:
+== Features
 * Simple CLI
 * Random unique shortened url generation
 * Retrieval of long urls
@@ -12,11 +12,11 @@ Rails app allowing user to create and save shortened urls.
 * Custom shortened URLs for Premium users
 * URL Voting
 
-== To Run:
+== To Run
 * Ruby/Rails must be installed on your machine
 * Run `bundle install` to install necessary gems
 * Access CLI by running `rails runner bin/cli`
 
-= TODO
+=== TODO
 * add dictionary and allow for shortened urls based on random words
 * pruning and related rake task
