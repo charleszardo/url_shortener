@@ -19,4 +19,8 @@ class User < ActiveRecord::Base
     :through => :visits,
     :source => :shortened_url
   )
+
+  def is_premium?
+    self.premium
+  end
 end
