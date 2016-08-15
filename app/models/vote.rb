@@ -7,6 +7,15 @@ class Vote < ActiveRecord::Base
 
   belongs_to :shortened_url
 
+  def self.create_or_update_by(shortened_url, user, upvote)
+    vote = Vote.where(shortened_url_id: shortened_url.id, user_id: user.id).first
+    if vote
+      vote.upvote = upvote
+      vote.save
+    else
+      Vote.create!(shortened_url_id: shortened_url.id, user_id: user.id, upvote: upvote)
+  end
+
   def user_cannot_vote_own_url
     if shortened_url.submitter_id == self.user_id
       errors[:base] << "you cannot vote for your own url"
