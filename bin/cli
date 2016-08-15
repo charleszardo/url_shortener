@@ -23,10 +23,8 @@ class CLI
     puts "Type in your long url"
     long_url = gets.chomp
 
-    shortened_url = ShortenedUrl.create_for_user_and_long_url!(@current_user, long_url)
-    puts "Short url is: #{shortened_url.short_url}"
-
-    shortened_url
+    @shortened_url = ShortenedUrl.create_for_user_and_long_url!(@current_user, long_url)
+    puts "Short url is: #{@shortened_url.short_url}"
   end
 
   def visit_url!
@@ -53,8 +51,7 @@ class CLI
       puts "Invalid response, try again."
     end
 
-    result = choice == 0 ? add_tag! : nil
-    result
+    @tag_topic = choice == 0 ? add_tag! : nil
   end
 
   def add_tag!
@@ -73,10 +70,10 @@ class CLI
 
     case get_user_choice
     when 0
-      tag_topic = tagging
+      tagging
 
-      url = create_url!
-      create_tagging!(tag_topic, url) if tag_topic
+      create_url!
+      create_tagging!(@tag_topic, @shortened_url) if @tag_topic
     when 1
       visit_url!
     end
