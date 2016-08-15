@@ -58,6 +58,19 @@ class ShortenedUrl < ActiveRecord::Base
       .group("shortened_urls.id")
   end
 
+  def self.top
+    top_urls = ShortenedUrl
+      .select("shortened_urls.*, COUNT(votes.id) AS vote_count")
+      .joins("LEFT OUTER JOIN votes ON votes.shortened_url_id = shortened_urls.id")
+      .group("shortened_urls.id")
+      .order("vote_count DESC")
+      .limit("10")
+
+      top_urls.map do |url|
+        { url_obj: url, vote_count: url.vote_count}
+      end
+  end
+
   def num_clicks
     visits.count
   end
