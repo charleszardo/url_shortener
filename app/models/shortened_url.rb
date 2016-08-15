@@ -64,9 +64,23 @@ class ShortenedUrl < ActiveRecord::Base
       .joins("LEFT OUTER JOIN votes ON votes.shortened_url_id = shortened_urls.id")
       .group("shortened_urls.id")
       .order("vote_count DESC")
-      .limit("10")
+      .limit("3")
 
       top_urls.map do |url|
+        { url_obj: url, vote_count: url.vote_count}
+      end
+  end
+
+  def self.hot
+    hot_urls = ShortenedUrl
+      .select("shortened_urls.*, COUNT(votes.id) AS vote_count")
+      .joins("LEFT OUTER JOIN votes ON votes.shortened_url_id = shortened_urls.id")
+      .where("votes.created_at > ?", 30.minutes.ago)
+      .group("shortened_urls.id")
+      .order("vote_count DESC")
+      .limit("3")
+
+      hot_urls.map do |url|
         { url_obj: url, vote_count: url.vote_count}
       end
   end
