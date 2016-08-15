@@ -14,17 +14,17 @@ class Vote < ActiveRecord::Base
       vote.save
     else
       Vote.create!(shortened_url_id: shortened_url.id, user_id: user.id, upvote: upvote)
+    end
   end
 
   def user_cannot_vote_own_url
-    if shortened_url.submitter_id == self.user_id
+    if self.shortened_url.submitter_id == self.user_id
       errors[:base] << "you cannot vote for your own url"
     end
   end
 
   def limit_one_vote_per_url_per_user
-    vote = Vote.find(user_id: self.user_id, shortend_url_id: self.shortened_url_id)
-
+    vote = Vote.where(user_id: self.user_id, shortened_url_id: self.shortened_url_id).first
     if vote && vote.upvote == self.upvote
       errors[:base] << "you can only vote once per url"
     end
