@@ -19,11 +19,42 @@ class CLI
     choice
   end
 
+  def custom_url_prompt
+    while true
+      puts "Would you like to make a custom url?"
+      puts "0. Yes"
+      puts "1. No"
+
+      choice = Integer(gets.chomp)
+      break if [0, 1].include?(choice)
+      puts "Invalid response"
+    end
+
+    choice == 0
+  end
+
+  def create_custom_url
+    puts "What would you like your url to be?"
+    while true
+      custom_url = gets.chomp
+      break if ShortenedUrl.unique_shortened_url?(custom_url)
+      puts "That url is already taken. Please try again."
+    end
+
+    ShortenedUrl.create_custom_url_for_user_and_long_url!(@current_user, @long_url, custom_url)
+  end
+
   def create_url!
     puts "Type in your long url"
-    long_url = gets.chomp
+    @long_url = gets.chomp
+    is_custom_url = @current_user.is_premium? ? custom_url_prompt : false
 
-    @shortened_url = ShortenedUrl.create_for_user_and_long_url!(@current_user, long_url)
+    if is_custom_url
+      @shortened_url = create_custom_url
+    else
+      @shortened_url = ShortenedUrl.create_for_user_and_long_url!(@current_user, @long_url)
+    end
+
     puts "Short url is: #{@shortened_url.short_url}"
   end
 
