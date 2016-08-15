@@ -1,5 +1,5 @@
 class Vote < ActiveRecord::Base
-  validates :upvote, :shortened_url_id, :user_id :presence => true
+  validates :upvote, :shortened_url_id, :user_id, :presence => true
 
   belongs_to :user
 
