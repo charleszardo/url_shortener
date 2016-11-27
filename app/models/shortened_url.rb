@@ -20,7 +20,7 @@ class ShortenedUrl < ActiveRecord::Base
 
   has_many :tag_topics, :through => :taggings, :source => :tag_topic
 
-  has_many :votes
+  has_many :votes, dependent: :destroy
 
   def self.random_code
       loop do
