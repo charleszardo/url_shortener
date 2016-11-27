@@ -34,11 +34,22 @@ class ShortenedUrl < ActiveRecord::Base
       end
   end
 
+  def self.random_dict_code
+    dict = {}
+    File.open("#{Rails.public_path}/dictionary.txt") do |f|
+      f.each_line do |line|
+        dict[line.chomp] = true;
+      end
+    end
+
+    loop do
+      code = dict.keys.sample(2).join("_")
+      return code unless ShortenedUrl.exists?(short_url: code)
+    end
+  end
+
   def self.create_for_user_and_long_url!(user, long_url)
-    p user
-    p user.id
-    p long_url
-    ShortenedUrl.create!(submitter_id: user.id, long_url: long_url, short_url: ShortenedUrl.random_code)
+    ShortenedUrl.create!(submitter_id: user.id, long_url: long_url, short_url: ShortenedUrl.random_dict_code)
   end
 
   def self.create_custom_url_for_user_and_long_url!(user, long_url, custom_url)
