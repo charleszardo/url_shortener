@@ -61,12 +61,13 @@ class ShortenedUrl < ActiveRecord::Base
   end
 
   def self.prune
-    ShortenedUrl
-      .select("visits.*")
+    recent_visits = ShortenedUrl
+      .select("shortened_urls.*")
       .joins("LEFT OUTER JOIN visits ON visits.shortened_url_id = shortened_urls.id")
-      .where("visits.created_at IS NOT null")
-      .order("visits.created_at")
+      .where("(visits.created_at IS null AND shortened_urls.created_at > ?) OR visits.created_at > ?", 10.days.ago, 10.days.ago)
       .group("shortened_urls.id")
+
+    ShortenedUrl.destroy_all(['id IN (?)', recent_visits.collect(&:id)])
   end
 
   def self.top
