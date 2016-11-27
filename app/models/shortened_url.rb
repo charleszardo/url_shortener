@@ -7,12 +7,7 @@ class ShortenedUrl < ActiveRecord::Base
 
   belongs_to :submitter, :class_name => "User"
 
-  has_many(
-    :visits,
-    :class_name => "Visit",
-    :foreign_key => :shortened_url_id,
-    :primary_key => :id
-  )
+  has_many :visits, dependent: :destroy
 
   has_many(
     :visitors,
