@@ -18,5 +18,4 @@ Rails app allowing user to create and save shortened urls.
 * Access CLI by running `rails runner bin/cli`
 
 === TODO
-* add dictionary and allow for shortened urls based on random words
 * pruning and related rake task
