@@ -16,6 +16,3 @@ Rails app allowing user to create and save shortened urls.
 * Ruby/Rails must be installed on your machine
 * Run `bundle install` to install necessary gems
 * Access CLI by running `rails runner bin/cli`
-
-=== TODO
-* pruning and related rake task
